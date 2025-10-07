@@ -223,8 +223,9 @@ replace endCD_sctg2 = -14.94 if endCD_sctg2 == .
 encode state, gen(state1)
 xtset state1 year
 
-// create year dummy variable
+// create state and year dummy variables
 tab year, gen(t)
+tab state, gen(c)
 
 ***** Stage 2
 eststo clear
@@ -321,3 +322,4 @@ esttab endCD_sctg1 endCD_sctg1_th endCD_sctg2 endCD_sctg2_th endCD_sctg3 endCD_s
     mtitles("Drought(1)" "Ext/Mild Drought(2)" "Drought(1)" "Ext/Mild Drought(2)" "Drought(1)" "Ext/Mild Drought(2)") ///
 	order( sctg1 sctg2 sctg3 ln_k_FRB) ///
 	stats(FEj FEt swF rfF N, fmt(%s %s 2 2 0) labels("State F.E." "Year F.E." "Conditional SW F-statistics" "Reduced-form F-statistics" "N"))
+
