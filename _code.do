@@ -30,39 +30,39 @@ use _gravity, clear
 forv i = 1/3 {
 	
 	// drop shared variable names
-    capture drop dry_hom dry_orig dry_dest ///
-		dry_ext_hom dry_mild_hom dry_ext_orig ///
+    capture drop dry_home dry_orig dry_dest ///
+		dry_ext_home dry_mild_home dry_ext_orig ///
 		dry_mild_orig dry_ext_dest dry_mild_dest ///
-		wet_hom wet_orig wet_dest ///
+		wet_home wet_orig wet_dest ///
 		agprod_orig foodprod_dest ///
-		gdd_hom gdd_orig gdd_dest prec_hom prec_orig prec_dest
+		gdd_home gdd_orig gdd_dest prec_home prec_orig prec_dest
 
 ****** Drought without threshold
     // generate shared variable names
-    clonevar dry_hom =  ln_dry_sctg`i'_home
+    clonevar dry_home =  ln_dry_sctg`i'_home
     clonevar dry_orig = ln_dry_sctg`i'_orig
     clonevar dry_dest = ln_dry_sctg`i'_dest
 
-    clonevar wet_hom  = ln_wet_sctg`i'_home
+    clonevar wet_home  = ln_wet_sctg`i'_home
     clonevar wet_orig = ln_wet_sctg`i'_orig
     clonevar wet_dest = ln_wet_sctg`i'_dest
 
     clonevar agprod_orig   = ln_gdpi_sctg`i'
     clonevar foodprod_dest = L_ln_gdpj_sctg`i'
 
-    clonevar gdd_hom  = ln_gdd_sctg`i'_home
+    clonevar gdd_home  = ln_gdd_sctg`i'_home
     clonevar gdd_orig = ln_gdd_sctg`i'_orig
     clonevar gdd_dest = ln_gdd_sctg`i'_dest
 
-    clonevar prec_hom  = ln_prec_sctg`i'_home
+    clonevar prec_home  = ln_prec_sctg`i'_home
     clonevar prec_orig = ln_prec_sctg`i'_orig
     clonevar prec_dest = ln_prec_sctg`i'_dest
 
     // estimate ppml
-    qui ppmlhdfe sctg`i'tons dry_hom dry_orig dry_dest ///
-			wet_hom wet_orig wet_dest agprod_orig foodprod_dest ///
+    qui ppmlhdfe sctg`i'tons dry_home dry_orig dry_dest ///
+			wet_home wet_orig wet_dest agprod_orig foodprod_dest ///
 			mrt_sctg`i'_lntraveltime mrt_sctg`i'_neighbor mrt_sctg`i'_home ///
-			gdd_hom gdd_orig gdd_dest prec_hom prec_orig prec_dest ln_pop, ///
+			gdd_home gdd_orig gdd_dest prec_home prec_orig prec_dest ln_pop, ///
 			abs(FEij FEcit FEcjt) cluster(FEij) nolog d
 	
 	// store results
@@ -87,19 +87,19 @@ forv i = 1/3 {
 
 ****** Drought with threshold
     // generate shared variable names
-    clonevar dry_ext_hom  = ln_dry_sctg`i'_home_ext
-    clonevar dry_mild_hom = ln_dry_sctg`i'_home_mild
+    clonevar dry_ext_home  = ln_dry_sctg`i'_home_ext
+    clonevar dry_mild_home = ln_dry_sctg`i'_home_mild
     clonevar dry_ext_orig = ln_dry_sctg`i'_orig_ext
     clonevar dry_mild_orig= ln_dry_sctg`i'_orig_mild
     clonevar dry_ext_dest = ln_dry_sctg`i'_dest_ext
     clonevar dry_mild_dest= ln_dry_sctg`i'_dest_mild
 
     // estimate ppml
-    qui ppmlhdfe sctg`i'tons dry_ext_hom dry_mild_hom ///
+    qui ppmlhdfe sctg`i'tons dry_ext_home dry_mild_home ///
 			dry_ext_orig dry_mild_orig dry_ext_dest dry_mild_dest ///
-			wet_hom wet_orig wet_dest agprod_orig foodprod_dest ///
+			wet_home wet_orig wet_dest agprod_orig foodprod_dest ///
 			mrt_sctg`i'_lntraveltime mrt_sctg`i'_neighbor mrt_sctg`i'_home ///
-			gdd_hom gdd_orig gdd_dest prec_hom prec_orig prec_dest ln_pop, ///
+			gdd_home gdd_orig gdd_dest prec_home prec_orig prec_dest ln_pop, ///
 			abs(FEij FEcit FEcjt) cluster(FEij) nolog d
 
 	// store results
@@ -129,10 +129,10 @@ esttab model1 model1_th model2 model2_th model3 model3_th ///
     b(3) se(3) star(+ 0.12 * 0.10 ** 0.05 *** 0.01) ///
     label drop(mrt_sctg*) nocons ///
     mtitles("Drought(1)" "Extreme/mild(2)" "Drought(1)" "Extreme/mild(2)" "Drought(1)" "Extreme/mild(2)") ///
-	order( dry_hom dry_orig dry_dest ///
-		   dry_ext_hom dry_mild_hom dry_ext_orig dry_mild_orig dry_ext_dest dry_mild_dest ///
-		   wet_hom wet_orig wet_dest agprod_orig foodprod_dest ///
-		   gdd_hom gdd_orig gdd_dest prec_hom prec_orig prec_dest ln_pop) ///
+	order( dry_home dry_orig dry_dest ///
+		   dry_ext_home dry_mild_home dry_ext_orig dry_mild_orig dry_ext_dest dry_mild_dest ///
+		   wet_home wet_orig wet_dest agprod_orig foodprod_dest ///
+		   gdd_home gdd_orig gdd_dest prec_home prec_orig prec_dest ln_pop) ///
     stats(MRTs FEij FEcit FEcjt R2s R2p N, fmt(%s %s %s %s 3 3 0) ///
           labels("MRTs" "State-pair F.E." "Exporter climate zone-year F.E." "Importer climate zone-year F.E." "R-squared*" "Pseudo R-squared" "N"))
 
@@ -322,4 +322,5 @@ esttab endCD_sctg1 endCD_sctg1_th endCD_sctg2 endCD_sctg2_th endCD_sctg3 endCD_s
     mtitles("Drought(1)" "Ext/Mild Drought(2)" "Drought(1)" "Ext/Mild Drought(2)" "Drought(1)" "Ext/Mild Drought(2)") ///
 	order( sctg1 sctg2 sctg3 ln_k_FRB) ///
 	stats(FEj FEt swF rfF N, fmt(%s %s 2 2 0) labels("State F.E." "Year F.E." "Conditional SW F-statistics" "Reduced-form F-statistics" "N"))
+
 
